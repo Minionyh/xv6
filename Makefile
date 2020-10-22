@@ -2,6 +2,8 @@
 # To compile and run with a lab solution, set the lab name in lab.mk
 # (e.g., LB=util).  Run make grade to test solution with the lab's
 # grade script (e.g., grade-lab-util).
+gdb:
+	riscv64-unknown-elf-gdb kernel/kernel
 
 -include conf/lab.mk
 
@@ -149,6 +151,8 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	$U/_trace\
+	$U/_sysinfotest\
 
 
 
@@ -213,6 +217,7 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 ##
 ##  FOR testing lab grading script
 ##
+
 
 ifneq ($(V),@)
 GRADEFLAGS += -v

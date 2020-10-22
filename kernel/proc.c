@@ -40,6 +40,7 @@ procinit(void)
       uint64 va = KSTACK((int) (p - proc));
       kvmmap(va, (uint64)pa, PGSIZE, PTE_R | PTE_W);
       p->kstack = va;
+      p->tracemask = 0;
   }
   kvminithart();
 }
@@ -276,7 +277,7 @@ fork(void)
   np->sz = p->sz;
 
   np->parent = p;
-
+  np->tracemask = p->tracemask;
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -692,4 +693,16 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+// count processes
+int
+proccount(void)
+{
+  struct proc *p;
+  int c = 0;
+  for(p = proc; p < &proc[NPROC]; p++) {
+      initlock(&p->lock, "proc");
+      if(p->state != UNUSED) c++;
+  }
+  return c;
 }
